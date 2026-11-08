@@ -1,0 +1,125 @@
+{
+  "version": 1,
+  "classes": [
+    {
+      "classId": "G001",
+      "lessonType": "group",
+      "displayName": "第1・3月曜日 10:20｜1B",
+      "sortOrder": 1
+    },
+    {
+      "classId": "G002",
+      "lessonType": "group",
+      "displayName": "月3火曜日 10:20｜上級",
+      "sortOrder": 2
+    },
+    {
+      "classId": "G003",
+      "lessonType": "group",
+      "displayName": "第1・3火曜日 12:30｜3A",
+      "sortOrder": 3
+    },
+    {
+      "classId": "G004",
+      "lessonType": "group",
+      "displayName": "第2・4火曜日 13:00｜上級",
+      "sortOrder": 4
+    },
+    {
+      "classId": "G005",
+      "lessonType": "group",
+      "displayName": "第2・4水曜日 10:00｜2A",
+      "sortOrder": 5
+    },
+    {
+      "classId": "G006",
+      "lessonType": "group",
+      "displayName": "第2・4水曜日 13:00｜3A",
+      "sortOrder": 6
+    },
+    {
+      "classId": "G007",
+      "lessonType": "group",
+      "displayName": "第1・3水曜日 13:00｜1A",
+      "sortOrder": 7
+    },
+    {
+      "classId": "G008",
+      "lessonType": "group",
+      "displayName": "第1・3木曜日 10:20｜1A",
+      "sortOrder": 8
+    },
+    {
+      "classId": "G009",
+      "lessonType": "group",
+      "displayName": "第2・4木曜日 10:20｜1B",
+      "sortOrder": 9
+    },
+    {
+      "classId": "G010",
+      "lessonType": "group",
+      "displayName": "第2・4木曜日 13:00｜1B",
+      "sortOrder": 10
+    },
+    {
+      "classId": "G011",
+      "lessonType": "group",
+      "displayName": "第2・4木曜日 15:00｜1B",
+      "sortOrder": 11
+    },
+    {
+      "classId": "G012",
+      "lessonType": "group",
+      "displayName": "第2・4木曜日 19:00｜1B",
+      "sortOrder": 12
+    },
+    {
+      "classId": "G013",
+      "lessonType": "group",
+      "displayName": "第1・3金曜日 10:20｜1A",
+      "sortOrder": 13
+    },
+    {
+      "classId": "G014",
+      "lessonType": "group",
+      "displayName": "第2・4金曜日 13:00｜1A",
+      "sortOrder": 14
+    },
+    {
+      "classId": "G015",
+      "lessonType": "group",
+      "displayName": "月3土曜日 10:20｜3A",
+      "sortOrder": 15
+    },
+    {
+      "classId": "G016",
+      "lessonType": "group",
+      "displayName": "第1・3土曜日 13:00｜上級",
+      "sortOrder": 16
+    },
+    {
+      "classId": "G017",
+      "lessonType": "group",
+      "displayName": "第1・3土曜日 15:00｜1B",
+      "sortOrder": 17
+    },
+    {
+      "classId": "G018",
+      "lessonType": "group",
+      "displayName": "第1・3土曜日 17:00｜3A",
+      "sortOrder": 18
+    },
+    {
+      "classId": "G019",
+      "lessonType": "group",
+      "displayName": "第2・4土曜日 14:30｜1A",
+      "sortOrder": 19
+    },
+    {
+      "classId": "P001",
+      "lessonType": "private",
+      "displayName": "個人レッスン",
+      "sortOrder": 99
+    }
+  ]
+}
