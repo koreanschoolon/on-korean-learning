@@ -5,7 +5,252 @@
 <meta name="theme-color" content="#f7f8f5"><title>韓国語教室 ON | 学習館</title>
 <style>
 :root{--ink:#263a35;--muted:#65736e;--accent:#28775d;--line:#dce6df;--paper:#fff;--bg:#f7f8f5}*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;background:var(--bg);color:var(--ink);line-height:1.65}button,input{font:inherit}button{cursor:pointer}header{max-width:1080px;margin:auto;padding:25px 28px;display:flex;justify-content:space-between;align-items:center}.brand{display:flex;gap:12px;align-items:center;font-weight:800;letter-spacing:.02em}.logo{width:44px;height:44px;border-radius:15px;background:var(--accent);color:white;display:grid;place-items:center;font-size:20px;box-shadow:0 5px 15px #28775d22}.subbrand{font-size:12px;font-weight:500;color:var(--muted)}.pill{font-size:12px;color:var(--accent);border:1px solid #b9d4c5;background:#eaf4ed;padding:6px 12px;border-radius:99px}main{max-width:1080px;margin:auto;padding:32px 28px 72px}.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:42px;align-items:center;padding:45px 0 55px}.eyebrow{font-size:13px;font-weight:700;color:var(--accent);letter-spacing:.16em}.hero h1{font-size:clamp(35px,5vw,58px);line-height:1.28;letter-spacing:-.04em;margin:18px 0}.hero h1 span{color:var(--accent)}.desc{font-size:16px;color:var(--muted);max-width:510px}.features{display:flex;gap:10px;flex-wrap:wrap;margin:28px 0}.features span{font-size:13px;background:white;border:1px solid var(--line);border-radius:100px;padding:7px 13px}.login{background:var(--paper);border:1px solid var(--line);border-radius:24px;padding:32px;box-shadow:0 18px 50px #1c49340e}.login h2{margin:0;font-size:23px}.login p{color:var(--muted);font-size:13px;margin:5px 0 24px}.field{display:block;font-size:13px;font-weight:700;margin:16px 0 7px}.input{width:100%;border:1px solid #ccd8d1;background:#fff;border-radius:11px;padding:13px 14px;outline:none}.input:focus{border-color:var(--accent);box-shadow:0 0 0 3px #28775d20}.btn{width:100%;margin-top:22px;border:0;background:var(--accent);color:white;padding:14px 18px;border-radius:12px;font-weight:700}.btn:hover{background:#205f4b}.note{background:#f1f5f1;border-radius:10px;color:var(--muted);font-size:12px;padding:12px;margin-top:16px}.status{font-size:13px;margin-top:12px;min-height:20px;color:#a2463b}.sectionhead{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:18px}.sectionhead h2{font-size:23px;margin:0}.sectionhead small{color:var(--muted)}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.card{background:white;border:1px solid var(--line);border-radius:19px;padding:24px;min-height:180px}.symbol{width:42px;height:42px;background:#edf5ef;color:var(--accent);border-radius:12px;display:grid;place-items:center;font-size:22px}.card h3{margin:18px 0 6px;font-size:17px}.card p{color:var(--muted);font-size:13px;margin:0}.tag{display:inline-block;margin-top:14px;color:var(--accent);font-size:12px;font-weight:700}footer{border-top:1px solid var(--line);padding:22px;text-align:center;color:var(--muted);font-size:12px}@media(max-width:760px){header{padding:18px 20px}main{padding:8px 20px 55px}.hero{grid-template-columns:1fr;gap:18px;padding:25px 0 45px}.login{padding:24px}.cards{grid-template-columns:1fr}.card{min-height:0}.hero h1{font-size:39px}}
+
+/* ON 学習館: login and student approval */
+.lesson-type { display:flex; gap:12px; flex-wrap:wrap; margin:9px 0 14px; }
+.lesson-type label { display:flex; align-items:center; gap:8px; font-size:15px; cursor:pointer; padding:9px 11px; border:1px solid var(--line); border-radius:10px; }
+.lesson-type input { width:18px; height:18px; accent-color:var(--accent); }
+.login .input { min-height:52px; font-size:16px; }
+.login .field { font-size:15px; }
+.login .btn { min-height:52px; font-size:16px; }
+.login .status { font-size:14px; line-height:1.6; }
+.login .status.error { color:#a12b29; }
+.login .status.success { color:#225c42; }
+.login .secondary { width:100%; border:1px solid var(--line); border-radius:12px; color:var(--ink); background:white; padding:12px 16px; margin-top:14px; font-size:16px; cursor:pointer; }
+.login .member-summary { background:#f1f7f2; border-radius:12px; padding:20px; margin-top:16px; }
+.login .member-summary h3 { margin:0 0 12px; font-size:20px; }
+.login .member-summary p { font-size:15px; margin:7px 0; line-height:1.7; }
+.login a { color:var(--accent); font-size:14px; }
+.login [hidden] { display:none !important; }
 </style></head>
 <body><header><div class="brand"><div class="logo">온</div><div>韓国語教室 ON<div class="subbrand">韓国語学習館</div></div></div><span class="pill">学習館 · 準備中</span></header>
-<main><section class="hero"><div><div class="eyebrow">LEARN AT YOUR OWN PACE</div><h1>今日も、少しずつ。<br><span>韓国語と仲良く。</span></h1><p class="desc">授業で習った言葉を復習したり、発音を練習したり。自分のペースで韓国語を続けるための、韓国語教室 ON の学習スペースです。</p><div class="features"><span>📖 語彙の復習</span><span>🎧 聞く練習</span><span>✍️ 文法の復習</span></div></div><div class="login"><h2>学習館にログイン</h2><p>教室から案内されたお名前とパスワードを入力してください。</p><form id="login"><label class="field" for="name">お名前</label><input class="input" id="name" name="name" autocomplete="username" placeholder="お名前" required><label class="field" for="password">パスワード</label><input class="input" id="password" type="password" autocomplete="current-password" placeholder="パスワード" required><button class="btn" type="submit">ログイン →</button><div class="status" id="status" role="status" aria-live="polite"></div></form><div class="note">現在は画面のデザイン確認用です。ログイン機能は Firebase 接続後に利用できます。入力内容は送信・保存されません。</div></div></section><section><div class="sectionhead"><h2>学習メニュー</h2><small>これから順番に公開します</small></div><div class="cards"><article class="card"><div class="symbol">あ</div><h3>単語クイズ</h3><p>教科書と課を選んで、韓国語の単語を楽しく復習しましょう。</p><span class="tag">最初に公開予定</span></article><article class="card"><div class="symbol">♫</div><h3>教科書の音声</h3><p>授業の音声を聞きながら、何度でも繰り返し練習できます。</p><span class="tag">準備中</span></article><article class="card"><div class="symbol">✎</div><h3>文法・話す練習</h3><p>習った文法を使って文を作り、少しずつ表現を増やしましょう。</p><span class="tag">準備中</span></article></div></section></main><footer>© 韓国語教室 ON · Korean Language Classroom ON</footer>
-<script>document.getElementById('login').addEventListener('submit',function(e){e.preventDefault();document.getElementById('status').textContent='ログイン機能は現在準備中です。Firebase との接続後にご利用いただけます。';document.getElementById('password').value='';});</script></body></html>
+<main><section class="hero"><div><div class="eyebrow">LEARN AT YOUR OWN PACE</div><h1>今日も、少しずつ。<br><span>韓国語と仲良く。</span></h1><p class="desc">授業で習った言葉を復習したり、発音を練習したり。自分のペースで韓国語を続けるための、韓国語教室 ON の学習スペースです。</p><div class="features"><span>📖 語彙の復習</span><span>🎧 聞く練習</span><span>✍️ 文法の復習</span></div></div><div class="login">
+  <h2>学習館にログイン</h2>
+  <p>登録したお名前・受講クラス・パスワードを入力してください。</p>
+  <form id="login" hidden>
+    <label class="field" for="name">お名前</label>
+    <input class="input" id="name" name="name" autocomplete="username" maxlength="50" placeholder="例：田中花子" required>
+    <div class="field">受講形態</div>
+    <div class="lesson-type" role="group" aria-label="受講形態">
+      <label><input type="radio" name="lessonType" value="group" checked>グループ</label>
+      <label><input type="radio" name="lessonType" value="private">個人</label>
+    </div>
+    <label class="field" for="classId">受講クラス</label>
+    <select class="input" id="classId" name="classId" required disabled><option value="">読み込み中…</option></select>
+    <p class="note" style="margin:9px 0 15px">初回登録時のクラスを選んでください。クラス変更後も、ログイン方法の更新が完了するまでは登録時のクラスを使います。</p>
+    <label class="field" for="password">パスワード</label>
+    <input class="input" id="password" name="password" type="password" minlength="8" autocomplete="current-password" placeholder="8文字以上" required>
+    <button class="btn" id="loginButton" type="submit" disabled>ログイン</button>
+    <p class="note">この端末ではログイン状態が保存されます。共用の端末では、利用後に必ずログアウトしてください。</p>
+    <p style="margin-top:15px"><a href="./register.html">はじめての方はこちら（新規登録）</a></p>
+    <p class="note">パスワードを忘れた場合は、教室の公式LINEで先生にご連絡ください。</p>
+  </form>
+  <div id="memberPanel" class="member-summary" hidden>
+    <h3 id="memberTitle"></h3>
+    <p id="memberMessage"></p>
+    <p id="memberClass"></p>
+    <button type="button" class="secondary" id="logout">ログアウト</button>
+  </div>
+  <p class="status" id="status" role="status" aria-live="polite">ログイン状態を確認しています…</p>
+  <p class="note">現在はテスト運用中です。承認済みの方のみ学習メニューをご利用いただけます。</p>
+</div></section><section><div class="sectionhead"><h2>学習メニュー</h2><small>これから順番に公開します</small></div><div class="cards"><article class="card"><div class="symbol">あ</div><h3>単語クイズ</h3><p>教科書と課を選んで、韓国語の単語を楽しく復習しましょう。</p><span class="tag">最初に公開予定</span></article><article class="card"><div class="symbol">♫</div><h3>教科書の音声</h3><p>授業の音声を聞きながら、何度でも繰り返し練習できます。</p><span class="tag">準備中</span></article><article class="card"><div class="symbol">✎</div><h3>文法・話す練習</h3><p>習った文法を使って文を作り、少しずつ表現を増やしましょう。</p><span class="tag">準備中</span></article></div></section></main><footer>© 韓国語教室 ON · Korean Language Classroom ON</footer>
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js';
+import { getAuth, setPersistence, browserLocalPersistence, onAuthStateChanged,
+  signInWithEmailAndPassword, signOut } from 'https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js';
+import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js';
+
+// Firebase 웹 앱의 공개 연결 설정. 관리자 비밀번호나 서비스 계정 키가 아닙니다.
+const firebaseConfig = {
+  apiKey: 'AIzaSyChFLvg67MGrP6GlPIw1V8GSrd8TwxYHRE',
+  authDomain: 'koreanschoolon.firebaseapp.com',
+  projectId: 'koreanschoolon',
+  appId: '1:536227601205:web:e46f51a6067a0f21e30a7c'
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const form = document.getElementById('login');
+const statusEl = document.getElementById('status');
+const selectEl = document.getElementById('classId');
+const loginButton = document.getElementById('loginButton');
+const memberPanel = document.getElementById('memberPanel');
+const memberTitle = document.getElementById('memberTitle');
+const memberMessage = document.getElementById('memberMessage');
+const memberClass = document.getElementById('memberClass');
+const logoutButton = document.getElementById('logout');
+let classes = [];
+let signedInStudent = null;
+let observerVersion = 0;
+let classesReady = false;
+
+function setMessage(msg, error = false) {
+  statusEl.textContent = msg;
+  statusEl.className = 'status' + (error ? ' error' : '');
+}
+function chosenType() {
+  return document.querySelector('input[name="lessonType"]:checked').value;
+}
+function classTitle(id) {
+  return classes.find(c => c.classId === id)?.displayName || id || '';
+}
+function renderClasses() {
+  const previous = selectEl.value;
+  const available = classes.filter(c => c.lessonType === chosenType());
+  selectEl.replaceChildren();
+  const placeholder = document.createElement('option');
+  placeholder.value = '';
+  placeholder.textContent = 'クラスを選んでください';
+  selectEl.appendChild(placeholder);
+  for (const item of available) {
+    const opt = document.createElement('option');
+    opt.value = item.classId;
+    opt.textContent = item.displayName;
+    selectEl.appendChild(opt);
+  }
+  if (available.some(c => c.classId === previous)) selectEl.value = previous;
+  selectEl.disabled = available.length === 0;
+  loginButton.disabled = available.length === 0;
+  if (signedInStudent?.classId) {
+    memberClass.textContent = '登録クラス：' + classTitle(signedInStudent.classId);
+  }
+}
+for (const radio of document.querySelectorAll('input[name="lessonType"]')) {
+  radio.addEventListener('change', renderClasses);
+}
+async function loadClasses() {
+  try {
+    const response = await fetch('./data/classes.json', { cache: 'no-store' });
+    if (!response.ok) throw new Error('HTTP ' + response.status);
+    const data = await response.json();
+    if (!data || !Array.isArray(data.classes)) throw new Error('Invalid class list');
+    classes = data.classes.filter(c => c && typeof c.classId === 'string'
+      && typeof c.displayName === 'string' && ['group', 'private'].includes(c.lessonType));
+    if (!classes.length) throw new Error('Empty class list');
+    classesReady = true;
+    renderClasses();
+  } catch (_error) {
+    classesReady = false;
+    selectEl.disabled = true;
+    loginButton.disabled = true;
+    setMessage('クラスを読み込めませんでした。ページを更新してください。', true);
+  }
+}
+
+// 회원가입 페이지(register.html)와 동일한 내부 계정 계산 방식.
+// 최초 등록 클래스가 변경되면 이 매핑만으로 로그인할 수 없으므로 정식 공개 전 개선해야 합니다.
+async function internalEmail(name, classId) {
+  const normalizedName = name.normalize('NFKC').replace(/\s+/g, '').toLowerCase();
+  const bytes = new TextEncoder().encode('on-login-v1|' + classId + '|' + normalizedName);
+  const digest = new Uint8Array(await crypto.subtle.digest('SHA-256', bytes));
+  const hex = Array.from(digest).map(b => b.toString(16).padStart(2, '0')).join('');
+  return 'on-' + hex.slice(0, 48) + '@students.on-learning.invalid';
+}
+
+function showForm() {
+  signedInStudent = null;
+  form.hidden = false;
+  memberPanel.hidden = true;
+  document.getElementById('password').value = '';
+  if (classesReady) renderClasses();
+}
+function showMember(name, status, classId) {
+  form.hidden = true;
+  memberPanel.hidden = false;
+  memberTitle.textContent = name + ' さん';
+  memberClass.textContent = '登録クラス：' + classTitle(classId);
+  if (status === 'approved') {
+    memberMessage.textContent = 'ログインしました。学習メニューは順次公開予定です。';
+    setMessage('ログイン状態を保存しました。');
+  } else if (status === 'pending') {
+    memberMessage.textContent = '登録申請は承認待ちです。先生の確認後に利用できます。';
+    setMessage('現在、先生の承認をお待ちいただいています。');
+  } else if (status === 'rejected') {
+    memberMessage.textContent = '登録を確認できませんでした。先生にご連絡ください。';
+    setMessage('登録状況について教室にご確認ください。', true);
+  } else {
+    memberMessage.textContent = '登録状態を確認できません。先生にご連絡ください。';
+    setMessage('登録状態を確認できません。', true);
+  }
+}
+
+// 학습 자료에 대한 접근 허용 여부는 Firestore 규칙으로 결정해야 합니다.
+// 이 화면의 pending/approved 표시만으로 권한을 보호하는 것은 아닙니다.
+async function checkAccount(user) {
+  const version = ++observerVersion;
+  if (!user) {
+    showForm();
+    setMessage('お名前・受講クラス・パスワードでログインしてください。');
+    return;
+  }
+  form.hidden = true;
+  memberPanel.hidden = true;
+  setMessage('登録状況を確認しています…');
+  try {
+    const studentDoc = await getDoc(doc(db, 'students', user.uid));
+    if (version !== observerVersion) return;
+    if (!studentDoc.exists()) {
+      signedInStudent = null;
+      showMember('ご利用者', 'unknown', '');
+      return;
+    }
+    const student = studentDoc.data();
+    signedInStudent = student;
+    showMember(student.name || 'ご利用者', student.status, student.classId);
+  } catch (_error) {
+    if (version !== observerVersion) return;
+    signedInStudent = null;
+    showMember('ご利用者', 'unknown', '');
+    setMessage('登録情報にアクセスできません。先生にご連絡ください。', true);
+  }
+}
+
+form.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const name = document.getElementById('name').value.trim();
+  const password = document.getElementById('password').value;
+  const selected = classes.find(c => c.classId === selectEl.value && c.lessonType === chosenType());
+  if (!form.reportValidity() || !name || !selected) return;
+  loginButton.disabled = true;
+  setMessage('ログインしています…');
+  try {
+    await setPersistence(auth, browserLocalPersistence);
+    const email = await internalEmail(name, selected.classId);
+    await signInWithEmailAndPassword(auth, email, password);
+    // onAuthStateChanged에서 승인 상태를 확인합니다.
+  } catch (error) {
+    const msg = error?.code === 'auth/too-many-requests'
+      ? 'ログイン試行が多すぎます。しばらくしてからお試しください。'
+      : error?.code === 'auth/network-request-failed'
+      ? '通信に失敗しました。インターネット接続をご確認ください。'
+      : 'お名前・登録時のクラス・パスワードをご確認ください。';
+    setMessage(msg, true);
+    document.getElementById('password').value = '';
+  } finally {
+    loginButton.disabled = !classesReady;
+  }
+});
+logoutButton.addEventListener('click', async () => {
+  logoutButton.disabled = true;
+  try {
+    await signOut(auth);
+  } catch (_error) {
+    setMessage('ログアウトできませんでした。もう一度お試しください。', true);
+  } finally {
+    logoutButton.disabled = false;
+  }
+});
+
+// 같은 기기의 브라우저에 로그인 상태를 유지합니다.
+// 학생 자신이 로그아웃하거나 브라우저 저장 데이터를 지우면 로그인 정보가 사라집니다.
+try {
+  await setPersistence(auth, browserLocalPersistence);
+  onAuthStateChanged(auth, checkAccount, () => {
+    setMessage('ログイン状態を確認できませんでした。ページを更新してください。', true);
+  });
+  await loadClasses();
+} catch (_error) {
+  setMessage('ログインの準備に失敗しました。先生にご連絡ください。', true);
+}
+</script></body></html>
