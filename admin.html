@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f8f5">
+  <meta name="robots" content="noindex, nofollow">
+  <title>韓国語教室 ON | 学習館・管理者</title>
+  <style>
+    :root { --bg:#f7f8f5; --ink:#253b34; --accent:#28775d; --line:#dce5de; --muted:#64756e; --white:#fff; --red:#a12b29; }
+    * { box-sizing:border-box; }
+    html { font-family:-apple-system, BlinkMacSystemFont, "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif; }
+    body { margin:0; background:var(--bg); color:var(--ink); line-height:1.65; }
+    .wrap { max-width:850px; margin:0 auto; padding:25px 18px 65px; }
+    .top { display:flex; flex-wrap:wrap; gap:12px; justify-content:space-between; align-items:center; margin-bottom:30px; }
+    .brand { display:flex; gap:10px; align-items:center; font-weight:800; }
+    .logo { display:grid; place-items:center; width:46px; height:46px; background:var(--accent); color:#fff; border-radius:14px; font-size:21px; }
+    h1 { font-size:clamp(27px,4vw,34px); margin:0 0 6px; }
+    h2 { font-size:21px; margin:0 0 14px; }
+    p { margin:6px 0 14px; }
+    .sub { color:var(--muted); font-size:14px; }
+    .panel { background:var(--white); border:1px solid var(--line); border-radius:20px; padding:clamp(20px,4vw,32px); margin-top:18px; box-shadow:0 10px 28px #183a2a08; }
+    label { font-weight:700; display:block; margin:18px 0 7px; }
+    input { width:100%; padding:13px 14px; min-height:52px; border:1px solid #bbcbc2; border-radius:12px; font-size:17px; background:white; }
+    input:focus { outline:3px solid #28775d33; border-color:var(--accent); }
+    button { font:inherit; font-size:16px; font-weight:700; min-height:48px; border-radius:12px; cursor:pointer; padding:10px 16px; border:1px solid var(--line); background:#fff; color:var(--ink); }
+    button.primary { background:var(--accent); border-color:var(--accent); color:white; }
+    button:disabled { opacity:.55; cursor:not-allowed; }
+    .wide { width:100%; margin-top:22px; }
+    .row { display:flex; gap:10px; justify-content:space-between; align-items:center; flex-wrap:wrap; }
+    .status { min-height:24px; padding-top:12px; font-size:15px; color:var(--muted); white-space:pre-wrap; }
+    .error { color:var(--red); }
+    .success { color:#195e40; }
+    .student { border:1px solid var(--line); padding:20px; border-radius:15px; margin-top:12px; }
+    .student h3 { font-size:20px; margin:0 0 6px; overflow-wrap:anywhere; }
+    .student p { margin:3px 0 10px; font-size:15px; color:var(--muted); }
+    .student button { width:100%; margin-top:12px; }
+    .hint { padding:13px 16px; border-radius:12px; background:#edf5f0; font-size:14px; margin-top:14px; }
+    .screenreader { position:absolute; width:1px; height:1px; padding:0; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; }
+    [hidden] { display:none !important; }
+    a { color:var(--accent); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <div class="brand"><span class="logo">온</span><span>韓国語教室 ON<br><span class="sub">学習館・管理者ページ</span></span></div>
+      <a href="./index.html">学習館トップへ</a>
+    </header>
+    <h1>登録申請の承認</h1>
+    <p class="sub">先生専用のページです。認証情報はGitHubに保存されません。</p>
+
+    <section class="panel" id="loginPanel">
+      <h2>管理者ログイン</h2>
+      <p class="sub">Firebase Authentication で作成した先生のメールアドレスとパスワードを入力してください。</p>
+      <form id="adminLoginForm">
+        <label for="adminEmail">メールアドレス</label>
+        <input type="email" id="adminEmail" autocomplete="username" required placeholder="先生のメールアドレス">
+        <label for="adminPassword">パスワード</label>
+        <input type="password" id="adminPassword" autocomplete="current-password" required placeholder="管理者用パスワード">
+        <button class="primary wide" id="loginButton" type="submit">管理者としてログイン</button>
+      </form>
+      <p class="hint">学生としてログイン中でも、ここで管理者アカウントに切り替えられます。学生用と管理者用のテストは別のブラウザで行うと便利です。</p>
+    </section>
+
+    <section class="panel" id="adminPanel" hidden>
+      <div class="row">
+        <div><h2>承認待ちの申請</h2><p class="sub" id="adminIdentity"></p></div>
+        <button id="logoutButton" type="button">ログアウト</button>
+      </div>
+      <div class="row" style="margin-top:12px">
+        <p id="pendingCount" class="sub" style="margin:0"></p>
+        <button id="refreshButton" type="button">一覧を更新</button>
+      </div>
+      <div id="pendingList" aria-live="polite"></div>
+    </section>
+
+    <p class="status" id="status" role="status" aria-live="polite">ログイン状態を確認しています…</p>
+    <p class="sub" style="margin-top:22px">このページはテスト運用中です。承認前に、学生が本当に教室の受講者であることを確認してください。</p>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js';
+    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js';
+    import { getFirestore, collection, query, where, getDocs, doc, updateDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js';
+
+    // 공개 가능한 Firebase 웹 앱 설정입니다. 관리자 UID와 비밀번호는 코드에 넣지 않습니다.
+    const firebaseConfig = {
+      apiKey: 'AIzaSyChFLvg67MGrP6GlPIw1V8GSrd8TwxYHRE',
+      authDomain: 'koreanschoolon.firebaseapp.com',
+      projectId: 'koreanschoolon',
+      appId: '1:536227601205:web:e46f51a6067a0f21e30a7c'
+    };
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const loginPanel = document.getElementById('loginPanel');
+    const adminPanel = document.getElementById('adminPanel');
+    const loginForm = document.getElementById('adminLoginForm');
+    const loginButton = document.getElementById('loginButton');
+    const refreshButton = document.getElementById('refreshButton');
+    const logoutButton = document.getElementById('logoutButton');
+    const pendingList = document.getElementById('pendingList');
+    const pendingCount = document.getElementById('pendingCount');
+    const status = document.getElementById('status');
+    let verifiedAdminUid = null;
+    let authVersion = 0;
+    let classNames = new Map();
+
+    function message(text, type = '') {
+      status.textContent = text;
+      status.className = 'status' + (type ? ' ' + type : '');
+    }
+    function readableDate(timestamp) {
+      try { return timestamp?.toDate?.().toLocaleString('ja-JP') || '日時未記録'; }
+      catch (_) { return '日時未記録'; }
+    }
+    async function loadPublicClasses() {
+      try {
+        const response = await fetch('./data/classes.json', {cache:'no-store'});
+        if (!response.ok) return;
+        const result = await response.json();
+        classNames = new Map((result.classes || []).map(c => [c.classId, c.displayName]));
+      } catch (_) { /* 공개 클래스 목록이 없어도 관리 기능은 정상 작동 */ }
+    }
+    function makeText(tag, text, className) {
+      const el = document.createElement(tag);
+      el.textContent = text;
+      if (className) el.className = className;
+      return el;
+    }
+
+    // 관리자만 students 전체 목록을 조회할 수 있다는 Firestore 규칙으로 권한을 확인합니다.
+    async function fetchPending() {
+      if (!auth.currentUser) return;
+      const requestingUid = auth.currentUser.uid;
+      refreshButton.disabled = true;
+      message('承認待ちの申請を読み込んでいます…');
+      try {
+        if (!classNames.size) await loadPublicClasses();
+        const request = query(collection(db, 'students'), where('status', '==', 'pending'));
+        const snapshot = await getDocs(request);
+        if (!auth.currentUser || auth.currentUser.uid !== requestingUid) return;
+        verifiedAdminUid = auth.currentUser.uid;
+        loginPanel.hidden = true;
+        adminPanel.hidden = false;
+        document.getElementById('adminIdentity').textContent = auth.currentUser.email || '管理者';
+        pendingList.replaceChildren();
+        const students = snapshot.docs.map(item => ({id:item.id, ...item.data()}));
+        students.sort((a,b) => (a.createdAt?.seconds || 0) - (b.createdAt?.seconds || 0));
+        pendingCount.textContent = `${students.length}件の申請があります。`;
+        if (!students.length) {
+          pendingList.appendChild(makeText('p', '現在、承認待ちの申請はありません。', 'hint'));
+        }
+        for (const student of students) {
+          const card = document.createElement('article');
+          card.className = 'student';
+          card.appendChild(makeText('h3', student.name || '名前未登録'));
+          const cls = classNames.get(student.classId) || student.classId || '未登録';
+          card.appendChild(makeText('p', '受講クラス：' + cls));
+          card.appendChild(makeText('p', '受講形態：' + (student.lessonType === 'private' ? '個人' : 'グループ')));
+          card.appendChild(makeText('p', '申請日時：' + readableDate(student.createdAt)));
+          const button = makeText('button', 'この学生を承認する');
+          button.className = 'primary';
+          button.type = 'button';
+          button.addEventListener('click', async () => {
+            if (!auth.currentUser || auth.currentUser.uid !== verifiedAdminUid) return;
+            if (!window.confirm(`「${student.name || '名前未登録'}」さんを承認しますか？\n教室の在籍者であることを確認してください。`)) return;
+            button.disabled = true;
+            message('承認を保存しています…');
+            try {
+              await updateDoc(doc(db, 'students', student.id), {
+                status: 'approved',
+                reviewedAt: serverTimestamp(),
+                reviewedBy: auth.currentUser.uid
+              });
+              message('承認しました。学生が次回学習館を開いた際に承認状態を確認できます。', 'success');
+              await fetchPending();
+            } catch (error) {
+              button.disabled = false;
+              message(error?.code === 'permission-denied' ? '承認の権限がありません。Firestoreルールを確認してください。' : '承認を保存できませんでした。もう一度お試しください。', 'error');
+            }
+          });
+          card.appendChild(button);
+          pendingList.appendChild(card);
+        }
+        message('一覧を表示しました。', 'success');
+      } catch (error) {
+        verifiedAdminUid = null;
+        adminPanel.hidden = true;
+        loginPanel.hidden = false;
+        message(error?.code === 'permission-denied'
+          ? '管理者権限がありません。管理者アカウントを使い、Firestoreの管理者UID設定をご確認ください。'
+          : '申請一覧を取得できませんでした。通信状況とFirebase設定をご確認ください。', 'error');
+      } finally { refreshButton.disabled = false; }
+    }
+
+    loginForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      loginButton.disabled = true;
+      message('ログインしています…');
+      try {
+        await signInWithEmailAndPassword(auth, document.getElementById('adminEmail').value.trim(), document.getElementById('adminPassword').value);
+        document.getElementById('adminPassword').value = '';
+        // onAuthStateChanged에서 Firestore 권한 확인
+      } catch (error) {
+        message(error?.code === 'auth/too-many-requests'
+          ? 'ログイン試行が多いため、一時的に制限されています。'
+          : 'メールアドレスまたはパスワードをご確認ください。', 'error');
+      } finally { loginButton.disabled = false; }
+    });
+    refreshButton.addEventListener('click', fetchPending);
+    logoutButton.addEventListener('click', async () => {
+      logoutButton.disabled = true;
+      try { await signOut(auth); }
+      catch (_) { message('ログアウトできませんでした。', 'error'); }
+      finally { logoutButton.disabled = false; }
+    });
+    onAuthStateChanged(auth, async (user) => {
+      const version = ++authVersion;
+      verifiedAdminUid = null;
+      if (!user) {
+        loginPanel.hidden = false;
+        adminPanel.hidden = true;
+        loginForm.reset();
+        message('先生の管理者アカウントでログインしてください。');
+        return;
+      }
+      if (version !== authVersion) return;
+      await fetchPending();
+    }, () => message('認証状態を確認できませんでした。', 'error'));
+    loadPublicClasses();
+  </script>
+</body>
+</html>
