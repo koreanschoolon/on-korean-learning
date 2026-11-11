@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f5f8f5">
+  <title>単語の復習・発音 | 韓国語教室 ON 学習館</title>
+  <style>
+    :root { --green:#246d55; --deep:#263b34; --muted:#596d64; --line:#dce7df; --bg:#f5f8f5; --white:#fff; --soft:#e9f3ec; --red:#a2322d; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif; color:var(--deep); background:var(--bg); line-height:1.65; }
+    button,select { font:inherit; }
+    button { cursor:pointer; }
+    button:disabled { cursor:not-allowed; opacity:.48; }
+    a { color:var(--green); }
+    a:focus-visible,button:focus-visible,select:focus-visible { outline:3px solid #87bca2; outline-offset:3px; }
+    .top { border-bottom:1px solid var(--line); background:#fff; }
+    .top-inner { max-width:850px; padding:16px 22px; margin:auto; display:flex; gap:14px; align-items:center; justify-content:space-between; }
+    .brand { display:flex; align-items:center; gap:10px; font-weight:800; font-size:17px; }
+    .mark { background:var(--green); color:white; display:grid; place-items:center; width:43px; height:43px; border-radius:14px; font-size:21px; }
+    .back { font-weight:700; font-size:14px; white-space:nowrap; }
+    main { width:min(100%,850px); padding:28px 22px 72px; margin:auto; }
+    h1 { font-size:clamp(25px,5vw,32px); line-height:1.35; margin:0 0 10px; }
+    .lead { color:var(--muted); margin:0 0 24px; font-size:16px; }
+    .panel { background:var(--white); border:1px solid var(--line); border-radius:22px; padding:26px; margin-bottom:18px; }
+    .row { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    label { font-size:17px; display:block; font-weight:750; margin-bottom:8px; }
+    select { border:1px solid #b9cbc0; width:100%; min-height:56px; padding:12px 14px; font-size:17px; border-radius:12px; background:#fff; color:var(--deep); }
+    .meta { color:var(--muted); font-size:14px; margin:15px 0 0; }
+    .status { background:var(--soft); color:#245b44; border-radius:14px; padding:14px 18px; font-size:16px; margin:12px 0 22px; }
+    .status.error { background:#fff0ed; color:var(--red); }
+    .status[hidden],.panel[hidden],.study[hidden],.card-answer[hidden],#mainContent[hidden] { display:none !important; }
+    .study { margin-top:22px; }
+    .study-top { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:14px; }
+    .progress { color:var(--muted); font-weight:700; font-size:16px; }
+    .switch { border:1px solid var(--line); border-radius:12px; background:white; padding:9px 13px; font-weight:700; color:var(--green); font-size:15px; min-height:45px; }
+    .flashcard { background:#fff; border:1px solid var(--line); border-radius:22px; text-align:center; padding:44px 22px 32px; box-shadow:0 16px 35px rgba(26,74,52,.045); min-height:300px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+    .caption { color:var(--muted); font-size:14px; margin:0 0 14px; }
+    .word { font-size:clamp(32px,7vw,48px); font-weight:800; overflow-wrap:anywhere; line-height:1.4; margin:0; }
+    .answer-label { color:var(--muted); font-size:14px; margin:28px 0 5px; }
+    .answer { font-size:clamp(23px,5vw,29px); font-weight:700; color:var(--green); overflow-wrap:anywhere; line-height:1.45; }
+    .controls { margin-top:18px; display:grid; grid-template-columns:1fr 1.3fr 1fr; gap:10px; }
+    .button { border:1px solid #aac4b3; border-radius:12px; background:#fff; min-height:56px; font-size:17px; font-weight:750; padding:12px; color:var(--green); }
+    .button.primary { background:var(--green); color:#fff; border-color:var(--green); }
+    .info { color:var(--muted); font-size:14px; margin:18px 0 0; }
+    .tts-btn { margin-top:24px; display:inline-flex; align-items:center; justify-content:center; gap:10px; min-height:58px; padding:12px 23px; background:#e9f3ec; color:#246d55; border:2px solid #a8c9b6; border-radius:15px; font-size:18px; font-weight:800; }
+    .tts-btn:active { background:#dcebe1; }
+    .tts-info { margin:11px 0 0; color:#596d64; font-size:13px; max-width:520px; }
+    footer { text-align:center; color:var(--muted); font-size:12px; border-top:1px solid var(--line); padding:18px 22px; }
+    @media(max-width:600px) {
+      main { padding:23px 16px 50px; }
+      .top-inner { padding:12px 15px; }
+      .brand { font-size:15px; }
+      .panel { padding:20px 16px; border-radius:18px; }
+      .row { grid-template-columns:1fr; gap:15px; }
+      .flashcard { padding:36px 15px 27px; min-height:280px; }
+      .controls { gap:7px; }
+      .button { font-size:15px; padding:9px 5px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="top"><div class="top-inner">
+    <div class="brand"><div class="mark" aria-hidden="true">온</div><div>韓国語教室 ON<br><small style="font-weight:500;color:#596d64">学習館</small></div></div>
+    <a href="./index.html" class="back">ホームへ戻る</a>
+  </div></header>
+  <main>
+    <h1>📖 単語の復習</h1>
+    <p class="lead">教科書と課を選んで、少しずつ単語を覚えましょう。</p>
+    <div class="status" id="status" role="status" aria-live="polite">ログイン状態を確認しています…</div>
+    <section id="gate" class="panel" hidden>
+      <p id="gateText">ログインしてからご利用ください。</p>
+      <a class="button primary" style="display:block;text-align:center;text-decoration:none" href="./index.html">学習館のログイン画面へ</a>
+    </section>
+    <div id="mainContent" hidden>
+      <section class="panel" aria-label="教科書と課の選択">
+        <div class="row">
+          <div><label for="book">① 教科書を選ぶ</label><select id="book" disabled><option value="">読み込み中…</option></select></div>
+          <div><label for="unit">② 課を選ぶ</label><select id="unit" disabled><option value="">教科書を選んでください</option></select></div>
+        </div>
+        <p class="meta" id="unitInfo"></p>
+      </section>
+      <section id="study" class="study" hidden aria-label="単語カード">
+        <div class="study-top"><div class="progress" id="progress">1 / 1</div><button type="button" class="switch" id="direction" aria-label="出題方向を切り替える">韓国語 → 日本語</button></div>
+        <div class="flashcard">
+          <p class="caption" id="wordCaption">韓国語</p>
+          <p class="word" id="word"></p>
+          <button class="tts-btn" type="button" id="pronounce" aria-label="韓国語の発音を聞く">🔊 発音を聞く（0.85倍）</button>
+          <p class="tts-info" id="ttsInfo" role="status" aria-live="polite">韓国語の音声を端末から再生します。</p>
+          <div id="cardAnswer" class="card-answer" hidden>
+            <div class="answer-label" id="answerCaption">日本語</div>
+            <div class="answer" id="answer"></div>
+          </div>
+        </div>
+        <div class="controls">
+          <button class="button" type="button" id="prev">← 前へ</button>
+          <button class="button primary" type="button" id="reveal">答えを見る</button>
+          <button class="button" type="button" id="next">次へ →</button>
+        </div>
+        <p class="info">「答えを見る」を押すと意味が表示されます。発音は端末の韓国語音声を利用します。音が聞こえないときは、LINE内ではなくSafari（iPhone）・Chrome（Android）で開き、メディア音量と韓国語音声を確認してください。</p>
+        <p class="info" style="text-align:center">📝 10問クイズは次の段階で追加予定です。</p>
+      </section>
+    </div>
+  </main>
+  <footer>© 韓国語教室 ON · 学習館 / テスト運用中</footer>
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js';
+    import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js';
+    import { getFirestore, collection, doc, getDoc, getDocs } from 'https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js';
+
+    // 기존 학습관(index.html)과 동일한 Firebase 연결 정보 (비밀키 아님)
+    const firebaseConfig = {
+      apiKey: 'AIzaSyChFLvg67MGrP6GlPIw1V8GSrd8TwxYHRE',
+      authDomain: 'koreanschoolon.firebaseapp.com',
+      projectId: 'koreanschoolon',
+      appId: '1:536227601205:web:e46f51a6067a0f21e30a7c'
+    };
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const $ = id => document.getElementById(id);
+    const status = $('status');
+    const gate = $('gate');
+    const gateText = $('gateText');
+    const mainContent = $('mainContent');
+    const bookSelect = $('book');
+    const unitSelect = $('unit');
+    const study = $('study');
+    let units = [];
+    let currentWords = [];
+    let position = 0;
+    let reverse = false;
+    let revealed = false;
+    let loadedForUid = null;
+    // モバイル向け音声テスト。ボタンのタップ内で直接 speak() を呼び出す。
+    // iOS で再生が中断されないよう、読み上げオブジェクトへの参照を保持する。
+    const ttsSupported = ('speechSynthesis' in window && 'SpeechSynthesisUtterance' in window);
+    const synth = ttsSupported ? window.speechSynthesis : null;
+    const pronounceBtn = $('pronounce');
+    const ttsInfo = $('ttsInfo');
+    let activeUtterance = null;
+    let playbackWatch = null;
+
+    const inAppBrowser = /\bLine\/|\bLIFF\b|FBAN|FBAV|Instagram/i.test(navigator.userAgent);
+    const isAppleMobile = /iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    const externalBrowserHint = isAppleMobile
+      ? 'Safariで開いてお試しください。'
+      : 'Chromeで開いてお試しください。';
+
+    if (!ttsSupported) {
+      pronounceBtn.disabled = true;
+      ttsInfo.textContent = 'このブラウザーでは読み上げを利用できません。' + externalBrowserHint;
+    }
+
+    function chooseKoreanVoice() {
+      if (!synth) return null;
+      const voices = synth.getVoices();
+      return voices.find(v => v.lang?.toLowerCase() === 'ko-kr') ||
+        voices.find(v => v.lang?.toLowerCase().startsWith('ko')) || null;
+    }
+
+    function describeKoreanVoice() {
+      if (!ttsSupported || activeUtterance) return;
+      if (inAppBrowser) {
+        ttsInfo.textContent = 'LINEなどのアプリ内では音声が出ない場合があります。' + externalBrowserHint;
+        return;
+      }
+      const voice = chooseKoreanVoice();
+      if (voice) {
+        ttsInfo.textContent = '使用音声：' + voice.name + '（韓国語・速度0.85）';
+      } else {
+        ttsInfo.textContent = '韓国語音声が見つかりません。端末の韓国語音声を追加するか、' + externalBrowserHint;
+      }
+    }
+
+    if (ttsSupported) {
+      describeKoreanVoice();
+      if (synth.addEventListener) {
+        synth.addEventListener('voiceschanged', describeKoreanVoice);
+      } else {
+        synth.onvoiceschanged = describeKoreanVoice;
+      }
+    }
+
+    pronounceBtn.addEventListener('click', () => {
+      const word = currentWords[position]?.korean;
+      if (!word || !ttsSupported) return;
+      if (playbackWatch) clearTimeout(playbackWatch);
+      // 初回再生前に cancel() を呼ばない。モバイルで無音になる環境への対策。
+      if (synth.speaking || synth.pending) synth.cancel();
+      if (synth.paused) synth.resume();
+
+      const utterance = new SpeechSynthesisUtterance(word);
+      utterance.lang = 'ko-KR';
+      utterance.rate = 0.85;
+      utterance.pitch = 1;
+      const voice = chooseKoreanVoice();
+      if (voice) utterance.voice = voice;
+      activeUtterance = utterance;
+      let began = false;
+
+      pronounceBtn.textContent = '🔊 音声を準備中…';
+      ttsInfo.textContent = '読み上げを開始しています。音量をご確認ください。';
+      utterance.onstart = () => {
+        began = true;
+        pronounceBtn.textContent = '🔊 再生中…';
+        ttsInfo.textContent = '韓国語を再生中（速度0.85）';
+      };
+      utterance.onend = () => {
+        if (activeUtterance !== utterance) return;
+        activeUtterance = null;
+        pronounceBtn.textContent = '🔊 発音を聞く（0.85倍）';
+        describeKoreanVoice();
+      };
+      utterance.onerror = event => {
+        if (activeUtterance !== utterance) return;
+        activeUtterance = null;
+        pronounceBtn.textContent = '🔊 もう一度聞く';
+        const reason = event.error ? '（' + event.error + '）' : '';
+        ttsInfo.textContent = '音声を再生できませんでした' + reason + '。' + externalBrowserHint;
+      };
+      // iOSはユーザーのタップ操作中に speak() を呼ぶ必要があります。
+      synth.speak(utterance);
+      playbackWatch = setTimeout(() => {
+        if (activeUtterance === utterance && !began) {
+          ttsInfo.textContent = '音声の開始を確認できません。' + externalBrowserHint +
+            ' 韓国語の音声・メディア音量も確認してください。';
+          pronounceBtn.textContent = '🔊 もう一度聞く';
+        }
+      }, 3500);
+    });
+    window.addEventListener('pagehide', () => {
+      if (playbackWatch) clearTimeout(playbackWatch);
+      if (synth && (synth.speaking || synth.pending)) synth.cancel();
+      activeUtterance = null;
+    });
+
+    function message(text, isError = false) {
+      status.textContent = text;
+      status.classList.toggle('error', isError);
+    }
+    function blockAccess(text) {
+      mainContent.hidden = true;
+      gate.hidden = false;
+      gateText.textContent = text;
+      message(text, true);
+    }
+    function resetOptions(select, placeholder) {
+      select.replaceChildren();
+      const option = document.createElement('option');
+      option.value = '';
+      option.textContent = placeholder;
+      select.appendChild(option);
+    }
+    function option(select, value, name) {
+      const item = document.createElement('option');
+      item.value = value;
+      item.textContent = name;
+      select.appendChild(item);
+    }
+    function renderCard() {
+      if (synth && (synth.speaking || synth.pending)) synth.cancel();
+      activeUtterance = null;
+      if (playbackWatch) clearTimeout(playbackWatch);
+      pronounceBtn.textContent = '🔊 発音を聞く（0.85倍）';
+      const item = currentWords[position];
+      if (!item) { study.hidden = true; return; }
+      study.hidden = false;
+      $('progress').textContent = (position + 1) + ' / ' + currentWords.length;
+      $('direction').textContent = reverse ? '日本語 → 韓国語' : '韓国語 → 日本語';
+      $('wordCaption').textContent = reverse ? '日本語' : '韓国語';
+      $('answerCaption').textContent = reverse ? '韓国語' : '日本語';
+      $('word').textContent = reverse ? item.japanese : item.korean;
+      $('answer').textContent = reverse ? item.korean : item.japanese;
+      $('cardAnswer').hidden = !revealed;
+      $('reveal').textContent = revealed ? '答えを隠す' : '答えを見る';
+      $('prev').disabled = position === 0;
+      $('next').textContent = position === currentWords.length - 1 ? '最初へ ↺' : '次へ →';
+    }
+    function chooseUnit() {
+      const data = units.find(u => u.id === unitSelect.value);
+      currentWords = data ? data.words : [];
+      position = 0;
+      revealed = false;
+      $('unitInfo').textContent = data ? data.words.length + '語を復習できます。' : '';
+      renderCard();
+    }
+    function chooseBook() {
+      resetOptions(unitSelect, '課を選んでください');
+      const options = units.filter(u => u.book === bookSelect.value)
+        .sort((a, b) => a.unit.localeCompare(b.unit, 'ja', {numeric:true}));
+      for (const unit of options) option(unitSelect, unit.id, unit.unit);
+      unitSelect.disabled = options.length === 0;
+      if (options.length) unitSelect.value = options[0].id;
+      chooseUnit();
+    }
+    bookSelect.addEventListener('change', chooseBook);
+    unitSelect.addEventListener('change', chooseUnit);
+    $('direction').addEventListener('click', () => { reverse = !reverse; revealed = false; renderCard(); });
+    $('reveal').addEventListener('click', () => { revealed = !revealed; renderCard(); });
+    $('prev').addEventListener('click', () => { if (position > 0) { position--; revealed = false; renderCard(); } });
+    $('next').addEventListener('click', () => { if (currentWords.length) { position = (position + 1) % currentWords.length; revealed = false; renderCard(); } });
+
+    async function loadVocabulary() {
+      // 현재의 최소 기능 버전은 승인된 학생에게 139개 단원 문서를 1회 읽어
+      // 교재·과 목록을 구성합니다. 정식 운영 전 공개 메타데이터만 별도
+      // 목록으로 분리하면 Firestore 읽기 횟수를 크게 줄일 수 있습니다.
+      const snapshot = await getDocs(collection(db, 'vocab_units'));
+      const found = [];
+      snapshot.forEach(item => {
+        const data = item.data();
+        if (typeof data.book !== 'string' || typeof data.unit !== 'string' || !Array.isArray(data.items)) return;
+        const words = data.items.filter(w => w && typeof w.korean === 'string' && typeof w.japanese === 'string');
+        if (!words.length) return;
+        found.push({ id:item.id, book:data.book, unit:data.unit, words });
+      });
+      if (!found.length) throw new Error('empty');
+      units = found;
+      const books = [...new Set(units.map(u => u.book))].sort((a, b) => a.localeCompare(b, 'ja', {numeric:true}));
+      resetOptions(bookSelect, '教科書を選んでください');
+      for (const book of books) option(bookSelect, book, book);
+      bookSelect.disabled = false;
+      bookSelect.value = books[0];
+      chooseBook();
+      mainContent.hidden = false;
+      gate.hidden = true;
+      message('準備ができました。教科書と課を選んでください。');
+    }
+
+    onAuthStateChanged(auth, async user => {
+      if (!user) {
+        loadedForUid = null;
+        blockAccess('ログインしてからご利用ください。');
+        return;
+      }
+      if (loadedForUid === user.uid) return;
+      try {
+        message('利用登録を確認しています…');
+        const student = await getDoc(doc(db, 'students', user.uid));
+        if (!student.exists() || student.data().status !== 'approved') {
+          blockAccess('先生の承認後にご利用いただけます。');
+          return;
+        }
+        message('単語データを読み込んでいます…');
+        await loadVocabulary();
+        loadedForUid = user.uid;
+      } catch (error) {
+        console.error('ON vocabulary screen:', error?.code || error?.message || error);
+        blockAccess('データを読み込めませんでした。通信状態を確認するか、先生にご連絡ください。');
+      }
+    }, () => blockAccess('ログイン状態を確認できませんでした。ページを更新してください。'));
+  </script>
+</body>
+</html>
