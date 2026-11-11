@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light" />
+  <title>ON 学習館 | 音声チェック</title>
+  <style>
+    :root { font-family: -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif; background:#f8faf8; color:#263c33; }
+    * { box-sizing:border-box; }
+    body { margin:0; }
+    main { width:min(100% - 32px, 640px); margin:24px auto 50px; }
+    h1 { font-size:23px; margin:8px 0 12px; }
+    p { line-height:1.7; }
+    .panel { border:1px solid #dce6df; background:white; border-radius:18px; padding:20px; box-shadow:0 2px 12px #253e2e0b; }
+    .brand { font-weight:700; color:#24684e; font-size:14px; }
+    .korean { font-size:36px; font-weight:700; text-align:center; margin:16px auto; }
+    .steps { display:grid; gap:12px; margin:18px 0; }
+    button { width:100%; text-align:left; border:1px solid #afd0ba; background:#e9f6ee; border-radius:12px; font-weight:700; font-size:17px; padding:15px 17px; color:#1d5e47; min-height:58px; cursor:pointer; }
+    button:active { background:#d0e8d9; }
+    .sub { display:block; font-size:13px; color:#55685c; font-weight:500; margin-top:3px; }
+    .state { border-radius:12px; background:#f0f5f1; padding:12px 14px; min-height:50px; font-size:15px; white-space:pre-wrap; line-height:1.55; }
+    .state.error { background:#fff0ed; color:#9f3c30; }
+    .details { font-size:13px; color:#65756d; overflow-wrap:anywhere; }
+    details { margin-top:16px; }
+    summary { cursor:pointer; }
+    pre { overflow-wrap:anywhere; white-space:pre-wrap; font-size:12px; line-height:1.6; background:#f6f7f6; border-radius:10px; padding:12px; }
+    .footer { font-size:13px; margin-top:18px; color:#65756d; }
+  </style>
+</head>
+<body>
+<main>
+  <div class="brand">韓国語教室 ON · 学習館</div>
+  <h1>🔊 iPhone 音声チェック</h1>
+  <p>iPhone の Chrome で、下のボタンを順番にタップしてください。すべて同じ韓国語を読み上げます。<strong>アプリのデータやログイン情報は変更しません。</strong></p>
+  <section class="panel">
+    <div class="korean" lang="ko">안녕하세요</div>
+    <div class="steps">
+      <button id="testA" type="button">A. 標準の再生方法<span class="sub">韓国語 / 0.85倍 / 音声の指定なし</span></button>
+      <button id="testB" type="button">B. 韓国語の音声を指定<span class="sub">韓国語 / 0.85倍 / iPhone の音声リストから選択</span></button>
+      <button id="testC" type="button">C. 通常速度で再生<span class="sub">韓国語 / 1.0倍 / 音声の指定なし</span></button>
+    </div>
+    <div class="state" id="state" role="status" aria-live="polite">ボタンを押すと、ここに結果が表示されます。</div>
+    <p class="details" id="details"></p>
+    <details>
+      <summary>詳しい診断ログを見る</summary>
+      <pre id="log">（まだ実行していません）</pre>
+    </details>
+  </section>
+  <p class="footer">このテストはブラウザー内蔵の音声合成を使用します。通信で外部の音声 API に単語を送信しません。</p>
+</main>
+<script>
+(() => {
+  'use strict';
+  const state = document.getElementById('state');
+  const details = document.getElementById('details');
+  const log = document.getElementById('log');
+  const supported = 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
+  const synth = supported ? window.speechSynthesis : null;
+  let utterance = null;
+  let started = false;
+  let watchdog = null;
+  let seq = 0;
+  const history = [];
+  function report(message, isError = false) {
+    state.textContent = message;
+    state.className = 'state' + (isError ? ' error' : '');
+    history.push(new Date().toLocaleTimeString('ja-JP') + ' ' + message.replaceAll('\n', ' '));
+    log.textContent = history.slice(-24).join('\n');
+  }
+  function voices() {
+    try { return synth.getVoices(); } catch (_) { return []; }
+  }
+  function info() {
+    if (!supported) {
+      details.textContent = 'このブラウザーは Web Speech API に対応していません。';
+      document.querySelectorAll('button').forEach(b => b.disabled = true);
+      return;
+    }
+    const list = voices();
+    const korean = list.filter(v => (v.lang || '').toLowerCase().startsWith('ko'));
+    details.textContent = '検出音声：' + list.length + '件 / 韓国語：' + korean.length + '件' +
+      (korean.length ? '（' + korean.map(v => v.name).slice(0, 3).join('、') + '）' : '');
+  }
+  function speak(mode) {
+    if (!supported) return;
+    const thisSeq = ++seq;
+    clearTimeout(watchdog);
+    // ウェブページの操作の中でそのまま読み上げを開始します。
+    // 切替時だけ停止し、初回は cancel() を呼び出しません。
+    if (synth.speaking || synth.pending) synth.cancel();
+    if (synth.paused) synth.resume();
+    const item = new SpeechSynthesisUtterance('안녕하세요');
+    item.lang = 'ko-KR';
+    item.rate = mode === 'C' ? 1.0 : 0.85;
+    item.pitch = 1;
+    item.volume = 1;
+    started = false;
+    if (mode === 'B') {
+      const korean = voices().find(v => (v.lang || '').toLowerCase() === 'ko-kr') ||
+        voices().find(v => (v.lang || '').toLowerCase().startsWith('ko'));
+      if (korean) item.voice = korean;
+      else report('B：韓国語音声の候補が取得できません。言語指定だけで試します。');
+    }
+    utterance = item;
+    item.onstart = () => {
+      if (thisSeq !== seq) return;
+      started = true;
+      report(mode + '：読み上げ開始（音が聞こえたか確認してください）');
+    };
+    item.onend = () => {
+      if (thisSeq !== seq) return;
+      report(mode + '：読み上げ終了。音が聞こえましたか？');
+      utterance = null;
+    };
+    item.onerror = e => {
+      if (thisSeq !== seq) return;
+      report(mode + '：再生エラー：' + (e.error || '不明'), true);
+      utterance = null;
+    };
+    report(mode + '：再生を要求しました…');
+    try {
+      synth.speak(item);
+    } catch (e) {
+      report(mode + '：呼び出しエラー：' + e.message, true);
+      return;
+    }
+    watchdog = setTimeout(() => {
+      if (thisSeq !== seq) return;
+      if (!started && utterance === item) {
+        report(mode + '：4秒以内に再生開始が確認できませんでした。', true);
+      }
+    }, 4000);
+  }
+  document.getElementById('testA').addEventListener('click', () => speak('A'));
+  document.getElementById('testB').addEventListener('click', () => speak('B'));
+  document.getElementById('testC').addEventListener('click', () => speak('C'));
+  info();
+  if (supported && synth.addEventListener) synth.addEventListener('voiceschanged', info);
+})();
+</script>
+</body>
+</html>
